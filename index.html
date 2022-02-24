@@ -1,24 +1,86 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>FireBase Reading data (JAVA.Script)</title>
-    <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enppi Site Management System</title>
+    <style>
+        table {
+          width: 90%;
+          border-collapse: collapse;
+        }
+        table,
+        th,
+        td {
+          border: 1px solid black;
+        }
+        thead {
+          background-color: #1c87c9;
+          color: #ffffff;
+        }
+        th {
+          text-align: center;
+          height: 50px;
+        }
+        tbody tr:nth-child(odd) {
+          background: #cac9cc;
+        }
+        tbody tr:nth-child(even) {
+          background: #f4f4f4;
+        }
+      </style>
+</head>
+<body>
+    <a href="www.enppi.com"><img src="/IMAGES/logo.PNG"></a><h2 style="text-align: center;">ENPPI SITE MANAGEMENT SYSTEM</h2>
+    <br><br>
+   <center> <div id="table_data" class="mt-5"><img src="/IMAGES/progress.gif"></a></div></center>
 
-    <h1>Student DataBase
-      <br/><small><em>Primary Class</em></small>
-    </h1>
+<script>
+var sortBy="serial";
 
 
-    <ul id="userList"></ul>
+async function databaseFetch() {
 
-    <div id="userDetail">
-     <!-- <p >Name :<strong class="detailName"></strong></p> -->
-    </div>
+   
+          try {
+            const DatabaseKeys = ["serial","System","SYSTEM_DESC","Tag_No","TAG_DESC"];
+          let response = await fetch('https://fir-dbtest-11b6c-default-rtdb.firebaseio.com/3750-200/Database/.json');
+            console.log(response.ok)
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          } else {
+            const data = await response.json() ;
+            unsortedList=data;
+           // const sortedList2 = unsortedList.sort((a, b) => a.age.localeCompare(b.age));
+            //console.log(sortedList2);
+          data2=data;
+          var table_output = '<table class="table table-striped table-bordered">';
+            //Draw header 
+            table_output += '<tr>'
+            DatabaseKeys.forEach((value) =>{ table_output += '<th>'+value+'</th>'})
+            table_output += '</tr>';
+           
+           //fill table Data
+            data.forEach(obj => {
+                table_output += '<tr>';
+                DatabaseKeys.forEach((value) =>{ table_output += '<td>'+obj[value]+'</td>'})            
+                table_output += '</tr>';             
+                            });
+            //Close table  
+            table_output += '</table>';
+            
+            //Draw Table at Html
+            document.getElementById('table_data').innerHTML = table_output;
+          }
+        } catch(e) {
+          console.log(e);
+        }
+      }
 
-  </body>
-  <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
-  <script type="text/javascript" src="app.js"></script>
+      //test();
+      databaseFetch();
+</script>
+    
+</body>
 </html>
